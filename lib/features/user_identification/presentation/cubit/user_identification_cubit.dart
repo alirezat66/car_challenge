@@ -11,23 +11,36 @@ class UserIdentificationCubit extends Cubit<UserIdentificationState> {
   final GetUserIdentification getUser;
 
   UserIdentificationCubit(this.saveUser, this.getUser)
-      : super(UserIdentificationInitial());
+      : super(const UserIdentificationState());
 
   Future<void> saveUserId(String userId) async {
-    emit(UserIdentificationLoading());
+    emit(state.copyWith(status: IdentificationStatus.loading));
     final result = await saveUser(User(userId));
     result.fold(
-      (failure) => emit(UserIdentificationError(failure.message)),
-      (_) => emit(UserIdentificationLoaded(userId)),
+      (failure) => emit(state.copyWith(
+        status: IdentificationStatus.error,
+        errorMessage: failure.message,
+      )),
+      (_) => emit(state.copyWith(
+        status: IdentificationStatus.loaded,
+        userId: userId,
+      )),
     );
   }
 
   Future<void> loadUser() async {
-    emit(UserIdentificationLoading());
+    emit(state.copyWith(status: IdentificationStatus.loading));
     final result = await getUser(const NoParams());
     result.fold(
-      (failure) => emit(UserIdentificationInitial()), // No user, show input
-      (user) => emit(UserIdentificationLoaded(user.id)),
+      (failure) => emit(
+        state.copyWith(
+          status: IdentificationStatus.initial,
+        ),
+      ), // No user, show input
+      (user) => emit(state.copyWith(
+        status: IdentificationStatus.loaded,
+        userId: user.id,
+      )),
     );
   }
 }

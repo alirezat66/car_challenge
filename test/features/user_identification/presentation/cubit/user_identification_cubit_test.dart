@@ -34,23 +34,38 @@ void main() {
 
   // Test group for initial state and basic setup
   group('UserIdentificationCubit', () {
-    test('initial state is UserIdentificationInitial', () {
-      expect(cubit.state, UserIdentificationInitial());
+    test('initial state is UserIdentificationState with initial status', () {
+      expect(
+        cubit.state,
+        const UserIdentificationState(
+          userId: '',
+          status: IdentificationStatus.initial,
+          errorMessage: '',
+        ),
+      );
     });
   });
 
   // Test group for saveUserId
   group('saveUserId', () {
     blocTest<UserIdentificationCubit, UserIdentificationState>(
-      'emits [Loading, Loaded] when saveUserId succeeds',
+      'emits [loading, loaded] states when saveUserId succeeds',
       build: () {
         when(mockSaveUser(any)).thenAnswer((_) async => const Right(null));
         return cubit;
       },
       act: (cubit) => cubit.saveUserId(testUserId),
       expect: () => [
-        UserIdentificationLoading(),
-        UserIdentificationLoaded(testUserId),
+        const UserIdentificationState(
+          status: IdentificationStatus.loading,
+          userId: '',
+          errorMessage: '',
+        ),
+        const UserIdentificationState(
+          status: IdentificationStatus.loaded,
+          userId: testUserId,
+          errorMessage: '',
+        ),
       ],
       verify: (_) {
         verify(mockSaveUser(any)).called(1);
@@ -58,7 +73,7 @@ void main() {
     );
 
     blocTest<UserIdentificationCubit, UserIdentificationState>(
-      'emits [Loading, Error] when saveUserId fails',
+      'emits [loading, error] states when saveUserId fails',
       build: () {
         when(mockSaveUser(any))
             .thenAnswer((_) async => Left(LocalStorageFailure('Save failed')));
@@ -66,8 +81,16 @@ void main() {
       },
       act: (cubit) => cubit.saveUserId(testUserId),
       expect: () => [
-        UserIdentificationLoading(),
-        UserIdentificationError('Save failed'),
+        const UserIdentificationState(
+          status: IdentificationStatus.loading,
+          userId: '',
+          errorMessage: '',
+        ),
+        const UserIdentificationState(
+          status: IdentificationStatus.error,
+          userId: '',
+          errorMessage: 'Save failed',
+        ),
       ],
       verify: (_) {
         verify(mockSaveUser(any)).called(1);
@@ -78,7 +101,7 @@ void main() {
   // Test group for loadUser
   group('loadUser', () {
     blocTest<UserIdentificationCubit, UserIdentificationState>(
-      'emits [Loading, Loaded] when loadUser succeeds with existing user',
+      'emits [loading, loaded] states when loadUser succeeds with existing user',
       build: () {
         when(mockGetUser(const NoParams()))
             .thenAnswer((_) async => Right(User(testUserId)));
@@ -86,8 +109,16 @@ void main() {
       },
       act: (cubit) => cubit.loadUser(),
       expect: () => [
-        UserIdentificationLoading(),
-        UserIdentificationLoaded(testUserId),
+        const UserIdentificationState(
+          status: IdentificationStatus.loading,
+          userId: '',
+          errorMessage: '',
+        ),
+        const UserIdentificationState(
+          status: IdentificationStatus.loaded,
+          userId: testUserId,
+          errorMessage: '',
+        ),
       ],
       verify: (_) {
         verify(mockGetUser(const NoParams())).called(1);
@@ -95,7 +126,7 @@ void main() {
     );
 
     blocTest<UserIdentificationCubit, UserIdentificationState>(
-      'emits [Loading, Initial] when loadUser fails (no user found)',
+      'emits [loading, initial] states when loadUser fails (no user found)',
       build: () {
         when(mockGetUser(const NoParams()))
             .thenAnswer((_) async => Left(LocalStorageFailure('No user')));
@@ -103,8 +134,16 @@ void main() {
       },
       act: (cubit) => cubit.loadUser(),
       expect: () => [
-        UserIdentificationLoading(),
-        UserIdentificationInitial(),
+        const UserIdentificationState(
+          status: IdentificationStatus.loading,
+          userId: '',
+          errorMessage: '',
+        ),
+        const UserIdentificationState(
+          status: IdentificationStatus.initial,
+          userId: '',
+          errorMessage: '',
+        ),
       ],
       verify: (_) {
         verify(mockGetUser(const NoParams())).called(1);
