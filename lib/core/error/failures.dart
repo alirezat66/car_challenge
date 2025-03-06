@@ -24,3 +24,11 @@ class ServerFailure extends Failure {
 class UnknownFailure extends Failure {
   UnknownFailure([super.message = 'Unknown Failure']);
 }
+
+class LocalStorageFailure extends Failure {
+  LocalStorageFailure([super.message = 'Local Storage Failure']);
+}
+
+class IdentificationFailure extends Failure {
+  IdentificationFailure([super.message = 'Identification Failure']);
+}
