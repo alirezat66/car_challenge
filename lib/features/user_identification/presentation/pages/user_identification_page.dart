@@ -33,7 +33,7 @@ class _UserIdentificationPageState extends State<UserIdentificationPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => locator<UserIdentificationCubit>(),
+      create: (context) => locator<UserIdentificationCubit>()..getUser,
       child: Scaffold(
         appBar: AppBar(title: const Text('User Identification')),
         body: BlocConsumer<UserIdentificationCubit, UserIdentificationState>(

@@ -1,5 +1,6 @@
 import 'package:car_challenge/core/di/service_locator.dart';
 import 'package:car_challenge/core/route/app_router.dart';
+import 'package:car_challenge/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -15,10 +16,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'CarOnSale Challenge',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0ABAB5)),
-        useMaterial3: true,
-      ),
+      themeMode: ThemeMode.system,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       routerConfig: AppRouter.router,
     );
   }
