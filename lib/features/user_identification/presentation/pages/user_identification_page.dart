@@ -1,5 +1,4 @@
 import 'package:car_challenge/core/di/service_locator.dart';
-import 'package:car_challenge/core/notification/notification_factory.dart';
 import 'package:car_challenge/core/notification/notification_service.dart';
 import 'package:car_challenge/core/notification/notification_type.dart';
 import 'package:car_challenge/core/theme/theme_extension.dart';
@@ -11,7 +10,9 @@ import 'package:car_challenge/core/widgets/loading_widget.dart';
 import 'package:go_router/go_router.dart';
 
 class UserIdentificationPage extends StatefulWidget {
-  const UserIdentificationPage({super.key});
+  final NotificationService notificationService;
+
+  const UserIdentificationPage({super.key, required this.notificationService});
 
   @override
   State<UserIdentificationPage> createState() => _UserIdentificationPageState();
@@ -19,12 +20,10 @@ class UserIdentificationPage extends StatefulWidget {
 
 class _UserIdentificationPageState extends State<UserIdentificationPage> {
   final TextEditingController _controller = TextEditingController();
-  late NotificationService _notificationService;
 
   @override
   void initState() {
     super.initState();
-    _notificationService = NotificationServiceFactory.create(context);
   }
 
   @override
@@ -45,7 +44,7 @@ class _UserIdentificationPageState extends State<UserIdentificationPage> {
               // Navigate to vehicle selection page on successful identification
               context.go('/vehicle_selection');
             } else if (state.status == IdentificationStatus.error) {
-              _notificationService.showMessage(
+              widget.notificationService.showMessage(
                   message: 'Error: ${state.errorMessage}',
                   type: NotificationType.error);
             }
@@ -84,7 +83,19 @@ class _UserIdentificationPageState extends State<UserIdentificationPage> {
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: () => _login(),
+                    onPressed: state.status == IdentificationStatus.loading
+                        ? null
+                        : () {
+                            if (_controller.text.isNotEmpty) {
+                              context
+                                  .read<UserIdentificationCubit>()
+                                  .saveUserId(_controller.text);
+                            } else {
+                              widget.notificationService.showMessage(
+                                  message: 'Please enter a User ID',
+                                  type: NotificationType.error);
+                            }
+                          },
                     child: const Text('Continue'),
                   ),
                 ],
@@ -94,14 +105,5 @@ class _UserIdentificationPageState extends State<UserIdentificationPage> {
         ),
       ),
     );
-  }
-
-  _login() {
-    if (_controller.text.isNotEmpty) {
-      context.read<UserIdentificationCubit>().saveUserId(_controller.text);
-    } else {
-      _notificationService.showMessage(
-          message: 'Please enter a User ID', type: NotificationType.error);
-    }
   }
 }

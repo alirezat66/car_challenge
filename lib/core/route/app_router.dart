@@ -1,4 +1,5 @@
 import 'package:car_challenge/core/di/service_locator.dart';
+import 'package:car_challenge/core/notification/notification_factory.dart';
 import 'package:car_challenge/core/usecase/usecase.dart';
 import 'package:car_challenge/features/user_identification/domain/usecases/get_user_identification.dart';
 import 'package:car_challenge/features/user_identification/presentation/pages/user_identification_page.dart';
@@ -22,7 +23,9 @@ class AppRouter {
         path: '/',
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
-          child: const UserIdentificationPage(),
+          child: UserIdentificationPage(
+            notificationService: NotificationServiceFactory.create(context),
+          ),
         ),
       ),
       GoRoute(
