@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:car_challenge/core/client/extension/json_string_ext.dart';
 import 'package:car_challenge/core/client/snippet.dart';
 import 'package:car_challenge/core/error/factory/failure_factory.dart';
 import 'package:car_challenge/core/error/failures.dart';
@@ -36,9 +37,10 @@ class VehicleRemoteDataSourceImpl implements VehicleRemoteDataSource {
 
       switch (response.statusCode) {
         case 200:
-          parseVehicleData(response.body);
-          print(response.body);
-          final json = jsonDecode(response.body) as Map<String, dynamic>;
+          final responseString = response.body.isValidJson
+              ? response.body
+              : response.body.fixedJson;
+          final json = jsonDecode(responseString) as Map<String, dynamic>;
           final auctionModel = VehicleAuctionModel.fromJson(json);
           return VehicleData(auction: auctionModel.toEntity());
 
@@ -66,16 +68,5 @@ class VehicleRemoteDataSourceImpl implements VehicleRemoteDataSource {
     } catch (e) {
       throw UnknownFailure('Unexpected error: $e');
     }
-  }
-}
-
-Future<VehicleData> parseVehicleData(String responseBody) async {
-  try {
-    final json = jsonDecode(responseBody) as Map<String, dynamic>;
-    final auctionModel = VehicleAuctionModel.fromJson(json);
-    return VehicleData(auction: auctionModel.toEntity());
-  } catch (e) {
-    print('Error parsing JSON: $e');
-    rethrow;
   }
 }
