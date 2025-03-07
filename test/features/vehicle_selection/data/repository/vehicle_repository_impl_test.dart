@@ -188,7 +188,7 @@ void main() {
             userId: anyNamed('userId'),
             vin: anyNamed('vin'),
             externalId: anyNamed('externalId')))
-        .thenAnswer((_) async => VehicleData()); // Return some test data
+        .thenAnswer((_) async => const VehicleData()); // Return some test data
 
     // Act
     await repository.getVehicleData(vin: tVin);

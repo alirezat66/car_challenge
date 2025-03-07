@@ -1,4 +1,8 @@
 import 'package:car_challenge/core/di/service_locator.dart';
+import 'package:car_challenge/core/notification/notification_factory.dart';
+import 'package:car_challenge/core/notification/notification_service.dart';
+import 'package:car_challenge/core/notification/notification_type.dart';
+import 'package:car_challenge/core/theme/theme_extension.dart';
 import 'package:car_challenge/features/user_identification/presentation/cubit/user_identification_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,13 +19,12 @@ class UserIdentificationPage extends StatefulWidget {
 
 class _UserIdentificationPageState extends State<UserIdentificationPage> {
   final TextEditingController _controller = TextEditingController();
+  late NotificationService _notificationService;
 
   @override
   void initState() {
     super.initState();
-    // Check if user already exists
-    // ignore: use_build_context_synchronously
-    Future.microtask(() => context.read<UserIdentificationCubit>().loadUser());
+    _notificationService = NotificationServiceFactory.create(context);
   }
 
   @override
@@ -33,7 +36,7 @@ class _UserIdentificationPageState extends State<UserIdentificationPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => locator<UserIdentificationCubit>()..getUser,
+      create: (context) => locator<UserIdentificationCubit>()..loadUser(),
       child: Scaffold(
         appBar: AppBar(title: const Text('User Identification')),
         body: BlocConsumer<UserIdentificationCubit, UserIdentificationState>(
@@ -42,12 +45,9 @@ class _UserIdentificationPageState extends State<UserIdentificationPage> {
               // Navigate to vehicle selection page on successful identification
               context.go('/vehicle_selection');
             } else if (state.status == IdentificationStatus.error) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Error: ${state.errorMessage}'),
-                  backgroundColor: Colors.red,
-                ),
-              );
+              _notificationService.showMessage(
+                  message: 'Error: ${state.errorMessage}',
+                  type: NotificationType.error);
             }
           },
           builder: (context, state) {
@@ -61,12 +61,10 @@ class _UserIdentificationPageState extends State<UserIdentificationPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 20),
-                  const Text(
+                  Text(
                     'Welcome to CarOnSale',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: context.headlineSmall
+                        .copyWith(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 12),
@@ -86,22 +84,7 @@ class _UserIdentificationPageState extends State<UserIdentificationPage> {
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: () {
-                      if (_controller.text.isNotEmpty) {
-                        context
-                            .read<UserIdentificationCubit>()
-                            .saveUserId(_controller.text);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Please enter a User ID'),
-                          ),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
+                    onPressed: () => _login(),
                     child: const Text('Continue'),
                   ),
                 ],
@@ -111,5 +94,14 @@ class _UserIdentificationPageState extends State<UserIdentificationPage> {
         ),
       ),
     );
+  }
+
+  _login() {
+    if (_controller.text.isNotEmpty) {
+      context.read<UserIdentificationCubit>().saveUserId(_controller.text);
+    } else {
+      _notificationService.showMessage(
+          message: 'Please enter a User ID', type: NotificationType.error);
+    }
   }
 }
