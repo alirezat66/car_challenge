@@ -29,7 +29,7 @@ class VehicleRepositoryImpl implements VehicleRepository {
 
       try {
         // Step 2: Fetch from RemoteDataSource
-        final vehicleData = await remoteDataSource.fetchVehicleData(
+        final vehicleData = await remoteDataSource.getVehicleData(
           userId: user.id,
           vin: vin,
           externalId: externalId,

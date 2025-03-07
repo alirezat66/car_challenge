@@ -16,7 +16,7 @@ class VehicleRemoteDataSourceImpl implements VehicleRemoteDataSource {
   VehicleRemoteDataSourceImpl(this.httpClient);
 
   @override
-  Future<VehicleData> fetchVehicleData({
+  Future<VehicleData> getVehicleData({
     required String userId,
     String? vin,
     String? externalId,
