@@ -36,6 +36,8 @@ class VehicleRemoteDataSourceImpl implements VehicleRemoteDataSource {
 
       switch (response.statusCode) {
         case 200:
+          parseVehicleData(response.body);
+          print(response.body);
           final json = jsonDecode(response.body) as Map<String, dynamic>;
           final auctionModel = VehicleAuctionModel.fromJson(json);
           return VehicleData(auction: auctionModel.toEntity());
@@ -64,5 +66,16 @@ class VehicleRemoteDataSourceImpl implements VehicleRemoteDataSource {
     } catch (e) {
       throw UnknownFailure('Unexpected error: $e');
     }
+  }
+}
+
+Future<VehicleData> parseVehicleData(String responseBody) async {
+  try {
+    final json = jsonDecode(responseBody) as Map<String, dynamic>;
+    final auctionModel = VehicleAuctionModel.fromJson(json);
+    return VehicleData(auction: auctionModel.toEntity());
+  } catch (e) {
+    print('Error parsing JSON: $e');
+    rethrow;
   }
 }
