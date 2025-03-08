@@ -1,0 +1,27 @@
+name: ui_kit
+description: UI components and theme for the CarOnSale app
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Core package
+  core:
+    path: ../core
+    
+  # UI utilities
+  flutter_svg: ^2.0.7
+  cached_network_image: ^3.2.3
+  
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  
+flutter:
+  uses-material-design: true
