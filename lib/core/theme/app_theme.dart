@@ -47,6 +47,7 @@ class AppTheme {
       visualDensity: VisualDensity.compact,
       bottomNavigationBarTheme: _getBottomNavigationBarTheme(isDark: isDark),
       radioTheme: _getRadioTheme(isDark: isDark),
+      dataTableTheme: _getDataTableTheme(isDark: isDark),
       // Extensions removed
     );
   }
@@ -189,6 +190,22 @@ class AppTheme {
         }
         return isDark ? darkForeground : foregroundColor;
       }),
+    );
+  }
+
+  static _getDataTableTheme({required bool isDark}) {
+    return DataTableThemeData(
+      decoration: BoxDecoration(
+        color: Colors.white, // Background color of the table
+        borderRadius: BorderRadius.circular(8.0),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10.0,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
     );
   }
 }
