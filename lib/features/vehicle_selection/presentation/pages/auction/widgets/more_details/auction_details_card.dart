@@ -1,5 +1,5 @@
 import 'package:car_challenge/features/vehicle_selection/domain/entities/vehicle_auction.dart';
-import 'package:car_challenge/features/vehicle_selection/presentation/pages/widgets/more_details/auction_detail_table.dart';
+import 'package:car_challenge/features/vehicle_selection/presentation/pages/auction/widgets/more_details/auction_detail_table.dart';
 import 'package:flutter/material.dart';
 
 class AuctionDetailsCard extends StatelessWidget {

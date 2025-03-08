@@ -1,4 +1,4 @@
-import 'package:car_challenge/features/vehicle_selection/presentation/validator/vin_validation_mixin.dart';
+import 'package:car_challenge/features/vehicle_selection/presentation/pages/search/validator/vin_validation_mixin.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Create a test class that uses the mixin

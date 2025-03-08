@@ -6,12 +6,12 @@ import 'package:car_challenge/features/vehicle_selection/domain/usecases/get_veh
 import 'package:equatable/equatable.dart';
 
 part 'vehicle_selection_state.dart';
+
 class VehicleSelectionCubit extends Cubit<VehicleSelectionState> {
   final GetVehicleData getVehicleData;
 
   VehicleSelectionCubit({required this.getVehicleData})
       : super(const VehicleSelectionState());
-
 
   Future<void> submitVin(String vin) async {
     emit(state.copyWith(
@@ -75,5 +75,15 @@ class VehicleSelectionCubit extends Cubit<VehicleSelectionState> {
         }
       },
     );
+  }
+
+  Future retry() async {
+    if (state.vin.isNotEmpty && state.selectedExternalId == null) {
+      emit(state.copyWith(status: VehicleSelectionStatus.initial));
+    } else if (state.selectedExternalId != null) {
+      await selectVehicle(state.selectedExternalId!);
+    } else {
+      submitVin(state.vin);
+    }
   }
 }

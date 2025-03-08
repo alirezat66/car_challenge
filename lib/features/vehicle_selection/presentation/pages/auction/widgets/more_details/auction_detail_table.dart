@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:car_challenge/features/vehicle_selection/presentation/pages/widgets/more_details/auction_detail_row.dart';
+import 'package:car_challenge/features/vehicle_selection/presentation/pages/auction/widgets/more_details/auction_detail_row.dart';
 import 'package:flutter/material.dart';
 
 import 'package:car_challenge/core/theme/theme_extension.dart';

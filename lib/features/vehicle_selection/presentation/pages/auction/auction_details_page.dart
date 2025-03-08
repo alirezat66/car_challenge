@@ -1,8 +1,8 @@
 import 'package:car_challenge/features/vehicle_selection/domain/entities/vehicle_auction.dart';
-import 'package:car_challenge/features/vehicle_selection/presentation/pages/widgets/auction_basic_info_card.dart';
-import 'package:car_challenge/features/vehicle_selection/presentation/pages/widgets/more_details/auction_details_card.dart';
-import 'package:car_challenge/features/vehicle_selection/presentation/pages/widgets/auction_feedback_card.dart';
-import 'package:car_challenge/features/vehicle_selection/presentation/pages/widgets/auction_price_card.dart';
+import 'package:car_challenge/features/vehicle_selection/presentation/pages/auction/widgets/auction_basic_info_card.dart';
+import 'package:car_challenge/features/vehicle_selection/presentation/pages/auction/widgets/more_details/auction_details_card.dart';
+import 'package:car_challenge/features/vehicle_selection/presentation/pages/auction/widgets/auction_feedback_card.dart';
+import 'package:car_challenge/features/vehicle_selection/presentation/pages/auction/widgets/auction_price_card.dart';
 import 'package:flutter/material.dart';
 
 class AuctionDetailsPage extends StatelessWidget {
