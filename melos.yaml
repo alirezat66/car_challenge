@@ -1,0 +1,38 @@
+name: car_on_sale
+repository: https://github.com/your-username/car_on_sale
+
+packages:
+  - apps/**
+  - packages/**
+
+command:
+  bootstrap:
+    usePubspecOverrides: true
+
+scripts:
+  analyze:
+    run: melos exec -- "dart analyze ."
+    description: Run analyzer in all packages
+
+  format:
+    run: melos exec -- "dart format lib"
+    description: Run formatter in all packages
+
+  test:
+    run: melos exec -- "flutter test"
+    description: Run tests in all packages
+    packageFilters:
+      dirExists:
+        - test
+
+  clean:
+    run: melos exec -- "flutter clean"
+    description: Clean all build files
+    packageFilters:
+      flutter: true
+
+  build_runner:build:
+    run: melos exec -- "flutter pub run build_runner build --delete-conflicting-outputs"
+    description: Run build_runner build in all packages
+    packageFilters:
+      dependsOn: build_runner
