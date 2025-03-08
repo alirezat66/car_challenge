@@ -1,5 +1,5 @@
+import 'package:car_challenge/core/error/factory/failure_factory.dart';
 import 'package:car_challenge/core/error/failure.dart';
-import 'package:car_challenge/core/error/failures.dart';
 import 'package:car_challenge/features/vehicle_selection/data/datasources/vehicle_local_data_source.dart';
 import 'package:car_challenge/features/vehicle_selection/data/datasources/vehicle_remote_data_source.dart';
 import 'package:car_challenge/features/vehicle_selection/domain/entities/vehicle_data.dart';
@@ -24,7 +24,7 @@ class VehicleRepositoryImpl implements VehicleRepository {
       // Step 1: Get user ID from local datasource (for Step 2 auth)
       final user = localDataSource.getUser();
       if (user == null) {
-        return Left(IdentificationFailure('User not found'));
+        return Left(FailureFactory.authenticationFailure('User not found'));
       }
 
       try {
@@ -53,7 +53,8 @@ class VehicleRepositoryImpl implements VehicleRepository {
       }
     } on Exception catch (e) {
       // Catch unexpected errors not handled by Failure
-      return Left(UnknownFailure('Unexpected error in repository: $e'));
+      return Left(
+          FailureFactory.unknownFailure('Unexpected error in repository: $e'));
     }
   }
 }

@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:car_challenge/core/client/extension/json_string_ext.dart';
 import 'package:car_challenge/core/client/snippet.dart';
 import 'package:car_challenge/core/error/factory/failure_factory.dart';
-import 'package:car_challenge/core/error/failures.dart';
 import 'package:car_challenge/features/vehicle_selection/data/datasources/vehicle_remote_data_source.dart';
 import 'package:car_challenge/features/vehicle_selection/data/models/vehicle_auction_model.dart';
 import 'package:car_challenge/features/vehicle_selection/data/models/vehicle_choice_model.dart';
@@ -60,13 +59,14 @@ class VehicleRemoteDataSourceImpl implements VehicleRemoteDataSource {
               errorKey: errorKey, data: errorData);
       }
     } on TimeoutException {
-      throw NetworkFailure('Request timed out');
+      throw FailureFactory.networkFailure('Request timed out');
     } on ClientException catch (e) {
-      throw IdentificationFailure('Authentication error: ${e.message}');
+      throw FailureFactory.authenticationFailure(
+          'Authentication error: ${e.message}');
     } on FormatException {
-      throw DeserializationFailure('Invalid response format');
+      throw FailureFactory.deserializationFailure('Invalid response format');
     } catch (e) {
-      throw UnknownFailure('Unexpected error: $e');
+      throw FailureFactory.unknownFailure(e);
     }
   }
 }

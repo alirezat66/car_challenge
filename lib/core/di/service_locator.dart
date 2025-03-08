@@ -1,4 +1,5 @@
 import 'package:car_challenge/core/client/snippet.dart';
+import 'package:car_challenge/core/error/factory/failure_factory.dart';
 import 'package:car_challenge/features/user_identification/data/datasources/local_data_source.dart';
 import 'package:car_challenge/features/user_identification/data/repositories/user_repository_impl.dart';
 import 'package:car_challenge/features/user_identification/domain/repositories/user_repository.dart';
@@ -21,6 +22,7 @@ final GetIt locator = GetIt.instance;
 class ServiceLocator {
   Future<void> setup() async {
     await _setupPreferences();
+    _setupFactories();
     _setupUserIdentifier();
     _setupVehicleSelection();
   }
@@ -102,5 +104,9 @@ class ServiceLocator {
         getVehicleData: locator<GetVehicleData>(),
       ),
     );
+  }
+
+  void _setupFactories() {
+    setupFailureFactory();
   }
 }

@@ -1,34 +1,7 @@
-import 'package:car_challenge/core/error/failure.dart';
-
-class DeserializationFailure extends Failure {
-  DeserializationFailure([super.message = 'Deserialization Failure']);
-}
-
-class MaintenanceFailure extends Failure {
-  int get delaySeconds => extraData!['delaySeconds'] as int;
-
-  MaintenanceFailure({
-    required int delaySeconds,
-    String message = 'Maintenance Failure',
-  }) : super(message, extraData: {'delaySeconds': delaySeconds});
-}
-
-class NetworkFailure extends Failure {
-  NetworkFailure([super.message = 'Network Failure']);
-}
-
-class ServerFailure extends Failure {
-  ServerFailure([super.message = 'Server Failure']);
-}
-
-class UnknownFailure extends Failure {
-  UnknownFailure([super.message = 'Unknown Failure']);
-}
-
-class LocalStorageFailure extends Failure {
-  LocalStorageFailure([super.message = 'Local Storage Failure']);
-}
-
-class IdentificationFailure extends Failure {
-  IdentificationFailure([super.message = 'Identification Failure']);
-}
+export 'failures/deserialization_failure.dart';
+export 'failures/identification_failure.dart';
+export 'failures/local_storage_failure.dart';
+export 'failures/maintenance_failure.dart';
+export 'failures/network_failure.dart';
+export 'failures/server_failure.dart';
+export 'failures/unknown_failure.dart';

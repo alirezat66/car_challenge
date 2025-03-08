@@ -1,3 +1,4 @@
+import 'package:car_challenge/core/error/factory/failure_factory.dart';
 import 'package:car_challenge/core/error/failure.dart';
 import 'package:car_challenge/core/error/failures.dart';
 import 'package:car_challenge/features/user_identification/data/datasources/local_data_source.dart';
@@ -30,9 +31,10 @@ class UserRepositoryImpl implements UserRepository {
       if (user != null) {
         return Right(user);
       }
-      return Left(IdentificationFailure());
+      return Left(FailureFactory.authenticationFailure('User not found'));
     } catch (e) {
-      return Left(LocalStorageFailure());
+      return Left(
+          FailureFactory.storageFailure('Error accessing local storage'));
     }
   }
 }

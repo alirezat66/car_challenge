@@ -12,6 +12,31 @@ class FailureFactory {
     _creators[errorKey] = creator;
   }
 
+  static Failure authenticationFailure(String message) {
+    return IdentificationFailure(message);
+  }
+
+  static Failure networkFailure([String? message]) {
+    return NetworkFailure(message ?? 'Network connection error');
+  }
+
+  static Failure storageFailure([String? message]) {
+    return LocalStorageFailure(message ?? 'Storage error');
+  }
+
+  static Failure serverFailure(Map<String, dynamic> data) {
+    final errorKey = data['msgKey'] as String? ?? 'server_error';
+    return FailureFactory.createFailure(errorKey: errorKey, data: data);
+  }
+
+  static Failure deserializationFailure([String? message]) {
+    return DeserializationFailure(message ?? 'Data parsing error');
+  }
+
+  static Failure unknownFailure(Object error) {
+    return UnknownFailure('Unexpected error: $error');
+  }
+
   // Create a failure based on error key and data
   static Failure createFailure({
     required String errorKey,
@@ -44,5 +69,14 @@ void setupFailureFactory() {
 
   FailureFactory.registerFailure('deserialization_error', (data) {
     return DeserializationFailure(data['message'] ?? 'Deserialization Failure');
+  });
+  FailureFactory.registerFailure('identification_error', (data) {
+    return IdentificationFailure(data['message'] ?? 'Identification Failure');
+  });
+  FailureFactory.registerFailure('local_storage_error', (data) {
+    return IdentificationFailure(data['message'] ?? 'Local Storage Failure');
+  });
+  FailureFactory.registerFailure('unknown', (data) {
+    return IdentificationFailure(data['message'] ?? 'Unknown Failure');
   });
 }
