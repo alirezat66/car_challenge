@@ -85,8 +85,7 @@ void main() {
       setUpMockHttpClientSuccess200();
 
       // act
-      final result =
-          await dataSource.getVehicleData(userId: userId, vin: vin);
+      final result = await dataSource.getVehicleData(userId: userId, vin: vin);
 
       // assert
       expect(result.auction, isNotNull);
@@ -99,8 +98,7 @@ void main() {
       setUpMockHttpClientSuccess300();
 
       // act
-      final result =
-          await dataSource.getVehicleData(userId: userId, vin: vin);
+      final result = await dataSource.getVehicleData(userId: userId, vin: vin);
 
       // assert
       expect(result.auction, isNull);

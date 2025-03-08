@@ -18,8 +18,6 @@ final Map<String, dynamic> vehicleJsonMap = {
   "externalId": "DE001-018601450020001",
 };
 void main() {
- 
-
   group('VehicleChoiceModel', () {
     test('should be a subclass of VehicleChoice entity', () {
       // assert

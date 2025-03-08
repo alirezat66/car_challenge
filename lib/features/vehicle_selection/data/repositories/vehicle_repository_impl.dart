@@ -44,17 +44,22 @@ class VehicleRepositoryImpl implements VehicleRepository {
         return Right(vehicleData);
       } on Failure catch (remoteFailure) {
         // Step 4 Bonus Task: On error, try to fetch from cache
-        final cachedResult = await localDataSource.getVehicleAuction();
-        return cachedResult.fold(
-          (cacheFailure) =>
-              Left(remoteFailure), // Return original failure if no cache
-          (cachedAuction) => Right(VehicleData(auction: cachedAuction)),
-        );
+        return _getInfoFromCatch(remoteFailure);
       }
     } on Exception catch (e) {
       // Catch unexpected errors not handled by Failure
       return Left(
           FailureFactory.unknownFailure('Unexpected error in repository: $e'));
     }
+  }
+
+  Future<Either<Failure, VehicleData>> _getInfoFromCatch(
+      Failure originalFailure) async {
+    final cachedResult = await localDataSource.getVehicleAuction();
+    return cachedResult.fold(
+      (cacheFailure) =>
+          Left(originalFailure), // Return original failure if no cache
+      (cachedAuction) => Right(VehicleData(auction: cachedAuction)),
+    );
   }
 }
