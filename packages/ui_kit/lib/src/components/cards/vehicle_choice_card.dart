@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ui_kit/src/extension/similarity_ext.dart';
-import 'package:ui_kit/src/theme/theme_extension.dart';
+import 'package:ui_kit/ui_kit.dart';
 
 /// Card displaying a vehicle choice with similarity indicator
 class VehicleChoiceCard extends StatelessWidget {
