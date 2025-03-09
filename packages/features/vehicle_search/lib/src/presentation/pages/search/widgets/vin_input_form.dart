@@ -43,6 +43,7 @@ class _VinInputFormState extends State<VinInputForm> with VinValidationMixin {
             ),
             textInputAction: TextInputAction.search,
             textCapitalization: TextCapitalization.characters,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: validateVin,
             onFieldSubmitted: (_) => _submitForm(),
           ),

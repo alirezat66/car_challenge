@@ -1,7 +1,8 @@
 import 'package:core/core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesStorage implements LocalStorage {
-  final dynamic sharedPreferences;
+  final SharedPreferences sharedPreferences;
 
   SharedPreferencesStorage(this.sharedPreferences);
 

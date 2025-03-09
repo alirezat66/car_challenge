@@ -10,6 +10,6 @@ class SearchVehicleByVin implements UseCase<SearchResult, String> {
 
   @override
   Future<Either<Failure, SearchResult>> call(String vin) {
-    return repository.searchByVin(vin);
+    return repository.search(vin: vin);
   }
 }

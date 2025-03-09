@@ -100,4 +100,25 @@ class AuctionModel {
       estimationRequestId: estimationRequestId,
     );
   }
+
+  factory AuctionModel.fromEntity(Auction auction) {
+    return AuctionModel(
+      id: auction.id,
+      feedback: auction.feedback,
+      valuatedAt: auction.valuatedAt,
+      requestedAt: auction.requestedAt,
+      createdAt: auction.createdAt,
+      updatedAt: auction.updatedAt,
+      make: auction.make,
+      model: auction.model,
+      externalId: auction.externalId,
+      fkSellerUser: auction.fkSellerUser,
+      price: auction.price,
+      positiveCustomerFeedback: auction.positiveCustomerFeedback,
+      fkUuidAuction: auction.fkUuidAuction,
+      inspectorRequestedAt: auction.inspectorRequestedAt,
+      origin: auction.origin,
+      estimationRequestId: auction.estimationRequestId,
+    );
+  }
 }

@@ -10,6 +10,6 @@ class SelectVehicleOption implements UseCase<SearchResult, String> {
 
   @override
   Future<Either<Failure, SearchResult>> call(String externalId) {
-    return repository.selectVehicleOption(externalId);
+    return repository.search(externalId: externalId);
   }
 }

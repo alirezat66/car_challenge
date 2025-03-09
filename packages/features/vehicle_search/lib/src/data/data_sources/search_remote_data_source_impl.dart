@@ -49,19 +49,19 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
         default:
           final errorData = jsonDecode(response.body) as Map<String, dynamic>;
           final errorKey = errorData['msgKey'] as String? ?? 'unknown_error';
-          throw FailureFactory.createFailure(
-              errorKey: errorKey, data: errorData);
+          return Left( FailureFactory.createFailure(
+              errorKey: errorKey, data: errorData));
       }
     } on TimeoutException {
       return Left(FailureFactory.networkFailure('Request timed out'));
     } on ClientException catch (e) {
-      throw Left(FailureFactory.authenticationFailure(
+      return Left(FailureFactory.authenticationFailure(
           'Authentication error: ${e.message}'));
     } on FormatException {
-      throw Left(
+      return Left(
           FailureFactory.deserializationFailure('Invalid response format'));
     } catch (e) {
-      throw Left(FailureFactory.unknownFailure(e));
+      return Left(FailureFactory.unknownFailure(e));
     }
   }
 }

@@ -1,13 +1,11 @@
 import 'package:car_challenge/core/di/service_locator.dart';
-import 'package:car_challenge/core/notification/notification_factory.dart';
-import 'package:car_challenge/core/usecase/usecase.dart';
-import 'package:car_challenge/features/user_identification/domain/usecases/get_user_identification.dart';
-import 'package:car_challenge/features/user_identification/presentation/pages/user_identification_page.dart';
-import 'package:car_challenge/features/vehicle_selection/domain/entities/vehicle_auction.dart';
-import '../../../packages/features/vehicle_search/lib/src/presentation/pages/auction/auction_details_page.dart';
-import 'package:car_challenge/features/vehicle_selection/presentation/pages/search/vehicle_search_page.dart';
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ui_kit/ui_kit.dart';
+import 'package:user_identification/user_identification.dart';
+import 'package:vehicle_selection/vehicle_search.dart';
 
 class AppRouter {
   static final GlobalKey<NavigatorState> _rootNavigatorKey =
@@ -23,8 +21,14 @@ class AppRouter {
         path: '/',
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
-          child: UserIdentificationPage(
-            notificationService: NotificationServiceFactory.create(context),
+          child: BlocProvider(
+            create: (context) => locator<UserIdentificationCubit>(),
+            child: UserIdentificationPage(
+              onUserIdentified: () {
+                GoRouter.of(context).go('/vehicle_selection');
+              },
+              notificationService: NotificationServiceFactory.create(context),
+            ),
           ),
         ),
       ),
@@ -33,17 +37,25 @@ class AppRouter {
         name: 'vehicleSelection',
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
-          child: const VehicleSearchPage(),
+          child: BlocProvider(
+            create: (context) => locator<SearchCubit>(),
+            child: SearchPage(onAuctionLoaded: (auction) {
+              GoRouter.of(context).go('/auction_details', extra: auction);
+            }),
+          ),
         ),
       ),
       GoRoute(
         path: '/auction_details',
         name: 'auctionDetails',
         pageBuilder: (context, state) {
-          final VehicleAuction? auction = state.extra as VehicleAuction?;
+          final Auction? auction = state.extra as Auction?;
           return MaterialPage(
             key: state.pageKey,
-            child: AuctionDetailsPage(auction: auction!),
+            child: BlocProvider(
+              create: (context) => locator<UserIdentificationCubit>(),
+              child: AuctionDetailsPage(auction: auction!),
+            ),
           );
         },
       ),
