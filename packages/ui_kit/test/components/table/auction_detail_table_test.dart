@@ -85,8 +85,8 @@ void main() {
       final secondRowMaterialState = dataTable.rows[1].color;
 
       // We need to resolve the MaterialStateProperty to get the actual colors
-      expect(firstRowMaterialState, isA<MaterialStateProperty<Color?>>());
-      expect(secondRowMaterialState, isA<MaterialStateProperty<Color?>>());
+      expect(firstRowMaterialState, isA<WidgetStateProperty<Color?>>());
+      expect(secondRowMaterialState, isA<WidgetStateProperty<Color?>>());
 
       // MateriaStates resolve to different colors for alternating rows
       expect(firstRowMaterialState != secondRowMaterialState, true);
@@ -96,7 +96,7 @@ void main() {
         (WidgetTester tester) async {
       // Build the widget with empty list
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: AuctionDetailTable(
               rowItems: [],

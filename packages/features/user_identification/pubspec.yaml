@@ -1,0 +1,48 @@
+name: user_identification
+description: User identification feature for the CarOnSale app
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Core package
+  core:
+    path: ../../core
+    
+  # UI Kit
+  ui_kit:
+    path: ../../ui_kit
+  
+  # State management
+  flutter_bloc: ^8.1.3
+  
+  # Functional programming
+  dartz: ^0.10.1
+  
+  # Utilities
+  equatable: ^2.0.5
+  
+  # Dependency injection
+  get_it: ^7.6.0
+  
+  # Local storage
+  shared_preferences: ^2.2.0
+  
+  # Navigation
+  go_router: ^10.1.0
+  
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mockito: ^5.4.2
+  build_runner: ^2.4.6
+  bloc_test: ^9.1.4
+  
+flutter:
+  uses-material-design: true

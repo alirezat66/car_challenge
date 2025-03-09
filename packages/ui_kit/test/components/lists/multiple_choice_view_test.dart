@@ -87,7 +87,7 @@ void main() {
             body: MultipleChoicesView<TestChoice>(
               title: 'No Options',
               description: 'No options available',
-              choices: [], // Empty list
+              choices: const [], // Empty list
               itemBuilder: buildItemCard,
             ),
           ),

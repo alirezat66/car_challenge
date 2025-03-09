@@ -12,6 +12,7 @@ export 'src/client/extensions/json_string_ext.dart';
 
 // Storage
 export 'src/storage/local_storage.dart';
+export 'src/storage/shared_preferences_storage.dart';
 
 // Utils
 export 'src/utils/usecase.dart';

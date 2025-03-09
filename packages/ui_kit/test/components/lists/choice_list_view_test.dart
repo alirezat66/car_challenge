@@ -85,7 +85,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: ChoiceListView<TestItem>(
-              items: [], // Empty list
+              items: const [], // Empty list
               itemBuilder: testItemBuilder,
             ),
           ),
