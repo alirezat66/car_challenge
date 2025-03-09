@@ -7,7 +7,8 @@ export 'src/error/failures.dart';
 export 'src/error/factory/failure_factory.dart';
 
 // Network
-export 'src/client/snippet.dart';
+export 'src/client/cos_challenge.dart';
+
 export 'src/client/extensions/json_string_ext.dart';
 
 // Storage

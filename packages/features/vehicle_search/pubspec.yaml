@@ -36,6 +36,10 @@ dependencies:
   
   # Routing
   go_router: ^10.1.2
+
+  #Get It:
+    # Dependency injection
+  get_it: ^7.6.0
     
 dev_dependencies:
   flutter_test:
