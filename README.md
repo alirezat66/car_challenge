@@ -78,11 +78,11 @@ packages/
 
 - **Clean Architecture**: Separation of concerns with repository pattern
 - **Feature-First Organization**: Modular, self-contained feature packages
-- **MVVM Pattern**: Presentation logic separated from business logic
+- **Independency**: Presentation logic separated from business logic
 - **Dependency Injection**: Using GetIt for service location
 - **BLoC/Cubit**: State management with reactive patterns
 - **Go Router**: Advanced navigation management
-- **Repository Pattern**: Data access abstraction
+- **Multi Theming**: We picked color pallets for two dark and light theme that works based on user phone theme
 
 ## ✨ Key Features
 
@@ -90,13 +90,13 @@ packages/
 - Secure local storage of user identifiers
 - Persistence across app launches
 - Elegant UI for data collection
-
+- Local Storage can be replace with other technology easily
 ### VIN Search
 - Robust validation of 17-character VIN codes
 - Network error handling with graceful degradation
 - Comprehensive feedback for invalid inputs
 - Multiple vehicle match resolution
-
+- Json fixer strategy with extendability
 ### Error Handling
 - Friendly user feedback for all error types:
   - Network errors
@@ -122,7 +122,7 @@ The project includes comprehensive tests:
 - **Unit Tests**: Core logic, repositories, and use cases
 - **BLoC/Cubit Tests**: State management verification
 - **Widget Tests**: UI component validation
-- **Integration Tests**: End-to-end feature testing
+
 
 ## 🛠️ Technical Implementation
 
