@@ -1,9 +1,9 @@
 import 'package:core/core.dart';
 import 'package:dartz/dartz.dart';
-import '../repositories/vehicle_search_repository.dart';
+import '../repositories/search_repository.dart';
 
 class SelectVehicleOption implements UseCase<String, String> {
-  final VehicleSearchRepository repository;
+  final SearchRepository repository;
 
   SelectVehicleOption(this.repository);
 

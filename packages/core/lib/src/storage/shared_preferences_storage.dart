@@ -1,5 +1,4 @@
 import 'package:core/core.dart';
-import 'package:dartz/dartz.dart';
 
 class SharedPreferencesStorage implements LocalStorage {
   final dynamic sharedPreferences;
@@ -7,24 +6,24 @@ class SharedPreferencesStorage implements LocalStorage {
   SharedPreferencesStorage(this.sharedPreferences);
 
   @override
-  Future<Either<Failure, bool>> saveString(String key, String value) async {
+  Future<bool> saveString(String key, String value) async {
     try {
-      final result = await sharedPreferences.setString(key, value);
-      return Right(result);
+      return await sharedPreferences.setString(key, value);
     } catch (e) {
-      return Left(
-          FailureFactory.storageFailure('Error saving string value: $e'));
+      throw Exception(
+          FailureFactory.storageFailure('Error saving string value: $e')
+              .message);
     }
   }
 
   @override
-  Future<Either<Failure, String?>> getString(String key) async {
+  Future<String?> getString(String key) async {
     try {
-      final result = sharedPreferences.getString(key);
-      return Right(result);
+      return sharedPreferences.getString(key);
     } catch (e) {
-      return Left(
-          FailureFactory.storageFailure('Error retrieving string value: $e'));
+      throw Exception(
+          FailureFactory.storageFailure('Error reading string value: $e')
+              .message);
     }
   }
 }

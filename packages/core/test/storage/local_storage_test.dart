@@ -30,11 +30,7 @@ void main() {
       final result = await storage.getString(testKey);
 
       // assert
-      expect(result.isRight(), true);
-      result.fold(
-        (failure) => fail('Should return a value'),
-        (value) => expect(value, testValue),
-      );
+      expect(result, equals(testValue));
       verify(mockSharedPreferences.getString(testKey));
     });
 
@@ -47,28 +43,20 @@ void main() {
       final result = await storage.getString(testKey);
 
       // assert
-      expect(result.isRight(), true);
-      result.fold(
-        (failure) => fail('Should return a value'),
-        (value) => expect(value, null),
-      );
+      expect(result, null);
       verify(mockSharedPreferences.getString(testKey));
     });
 
-    test('should return failure when getString throws an exception', () async {
+    test('should handle exception when getString throws an exception',
+        () async {
       // arrange
       when(mockSharedPreferences.getString(any))
           .thenThrow(Exception('Test exception'));
 
       // act
-      final result = await storage.getString(testKey);
+      expect(() => storage.getString(testKey), throwsException);
 
-      // assert
-      expect(result.isLeft(), true);
-      result.fold(
-        (failure) => expect(failure, isA<LocalStorageFailure>()),
-        (_) => fail('Should return a failure'),
-      );
+      // verify the method was called
       verify(mockSharedPreferences.getString(testKey));
     });
 
@@ -81,28 +69,20 @@ void main() {
       final result = await storage.saveString(testKey, testValue);
 
       // assert
-      expect(result.isRight(), true);
-      result.fold(
-        (failure) => fail('Should return success'),
-        (success) => expect(success, true),
-      );
+      expect(result, true);
       verify(mockSharedPreferences.setString(testKey, testValue));
     });
 
-    test('should return failure when saveString throws an exception', () async {
+    test('should handle exception when saveString throws an exception',
+        () async {
       // arrange
       when(mockSharedPreferences.setString(any, any))
           .thenThrow(Exception('Test exception'));
 
       // act
-      final result = await storage.saveString(testKey, testValue);
+      expect(() => storage.saveString(testKey, testValue), throwsException);
 
-      // assert
-      expect(result.isLeft(), true);
-      result.fold(
-        (failure) => expect(failure, isA<LocalStorageFailure>()),
-        (_) => fail('Should return a failure'),
-      );
+      // verify the method was called
       verify(mockSharedPreferences.setString(testKey, testValue));
     });
   });

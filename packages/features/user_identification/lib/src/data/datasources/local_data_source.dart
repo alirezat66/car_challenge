@@ -18,35 +18,27 @@ class LocalDataSourceImpl implements LocalDataSource {
 
   @override
   Future<UserModel?> getUser() async {
-    final result = await localStorage.getString(StorageKeys.userKey);
-
-    return result.fold(
-      (failure) => null,
-      (jsonString) {
-        if (jsonString == null) {
-          return null;
-        }
-
-        try {
-          return UserModel.fromJson(
-              jsonDecode(jsonString) as Map<String, dynamic>);
-        } catch (e) {
-          return null;
-        }
-      },
-    );
+    try {
+      final jsonString = await localStorage.getString(StorageKeys.userKey);
+      try {
+        return UserModel.fromJson(
+            jsonDecode(jsonString!) as Map<String, dynamic>);
+      } catch (e) {
+        return null;
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override
   Future<void> saveUser(UserModel user) async {
-    final jsonString = jsonEncode(user.toJson());
+    try {
+      final jsonString = jsonEncode(user.toJson());
 
-    final result =
-        await localStorage.saveString(StorageKeys.userKey, jsonString);
-
-    result.fold(
-      (failure) => throw Exception('Failed to save user: ${failure.message}'),
-      (_) => null,
-    );
+      await localStorage.saveString(StorageKeys.userKey, jsonString);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

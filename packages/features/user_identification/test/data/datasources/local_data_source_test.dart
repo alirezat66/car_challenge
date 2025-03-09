@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:core/core.dart';
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -24,8 +23,7 @@ void main() {
 
     test('should return UserModel when data exists in localStorage', () async {
       // arrange
-      when(mockLocalStorage.getString(any))
-          .thenAnswer((_) async => Right(tUserJson));
+      when(mockLocalStorage.getString(any)).thenAnswer((_) async => tUserJson);
 
       // act
       final result = await dataSource.getUser();
@@ -37,40 +35,40 @@ void main() {
 
     test('should return null when no data exists in localStorage', () async {
       // arrange
-      when(mockLocalStorage.getString(any))
-          .thenAnswer((_) async => const Right(null));
+      when(mockLocalStorage.getString(any)).thenAnswer((_) async => null);
 
       // act
       final result = await dataSource.getUser();
 
       // assert
-      expect(result, null);
-      verify(mockLocalStorage.getString(StorageKeys.userKey));
-    });
-
-    test('should return null when localStorage returns failure', () async {
-      // arrange
-      when(mockLocalStorage.getString(any))
-          .thenAnswer((_) async => Left(LocalStorageFailure()));
-
-      // act
-      final result = await dataSource.getUser();
-
-      // assert
-      expect(result, null);
+      expect(result, isNull);
       verify(mockLocalStorage.getString(StorageKeys.userKey));
     });
 
     test('should return null when json is invalid', () async {
       // arrange
       when(mockLocalStorage.getString(any))
-          .thenAnswer((_) async => const Right('invalid json'));
+          .thenAnswer((_) async => 'invalid json');
 
       // act
       final result = await dataSource.getUser();
 
       // assert
-      expect(result, null);
+      expect(result, isNull);
+      verify(mockLocalStorage.getString(StorageKeys.userKey));
+    });
+
+    test('should rethrow exception when localStorage throws exception',
+        () async {
+      // arrange
+      when(mockLocalStorage.getString(any))
+          .thenThrow(Exception('Storage error'));
+
+      // act & assert
+      expect(
+        () => dataSource.getUser(),
+        throwsA(isA<Exception>()),
+      );
       verify(mockLocalStorage.getString(StorageKeys.userKey));
     });
   });
@@ -81,8 +79,7 @@ void main() {
 
     test('should call localStorage to save the user', () async {
       // arrange
-      when(mockLocalStorage.saveString(any, any))
-          .thenAnswer((_) async => const Right(true));
+      when(mockLocalStorage.saveString(any, any)).thenAnswer((_) async => true);
 
       // act
       await dataSource.saveUser(tUserModel);
@@ -91,10 +88,11 @@ void main() {
       verify(mockLocalStorage.saveString(StorageKeys.userKey, tUserJson));
     });
 
-    test('should throw exception when localStorage returns failure', () async {
+    test('should rethrow exception when localStorage throws exception',
+        () async {
       // arrange
       when(mockLocalStorage.saveString(any, any))
-          .thenAnswer((_) async => Left(LocalStorageFailure('Save failed')));
+          .thenThrow(Exception('Save failed'));
 
       // act & assert
       expect(

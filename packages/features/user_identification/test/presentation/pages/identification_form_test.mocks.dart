@@ -24,10 +24,6 @@ import 'package:ui_kit/ui_kit.dart' as _i2;
 /// See the documentation for Mockito's code generation for more information.
 class MockNotificationService extends _i1.Mock
     implements _i2.NotificationService {
-  MockNotificationService() {
-    _i1.throwOnMissingStub(this);
-  }
-
   @override
   void showMessage({
     required String? message,

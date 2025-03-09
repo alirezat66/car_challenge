@@ -3,10 +3,9 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
+import 'dart:async' as _i3;
 
-import 'package:core/core.dart' as _i3;
-import 'package:dartz/dartz.dart' as _i2;
+import 'package:core/src/storage/local_storage.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -22,26 +21,16 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeEither_0<L, R> extends _i1.SmartFake implements _i2.Either<L, R> {
-  _FakeEither_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
 /// A class which mocks [LocalStorage].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLocalStorage extends _i1.Mock implements _i3.LocalStorage {
+class MockLocalStorage extends _i1.Mock implements _i2.LocalStorage {
   MockLocalStorage() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<_i2.Either<_i3.Failure, bool>> saveString(
+  _i3.Future<bool> saveString(
     String? key,
     String? value,
   ) =>
@@ -53,33 +42,15 @@ class MockLocalStorage extends _i1.Mock implements _i3.LocalStorage {
             value,
           ],
         ),
-        returnValue: _i4.Future<_i2.Either<_i3.Failure, bool>>.value(
-            _FakeEither_0<_i3.Failure, bool>(
-          this,
-          Invocation.method(
-            #saveString,
-            [
-              key,
-              value,
-            ],
-          ),
-        )),
-      ) as _i4.Future<_i2.Either<_i3.Failure, bool>>);
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
 
   @override
-  _i4.Future<_i2.Either<_i3.Failure, String?>> getString(String? key) =>
-      (super.noSuchMethod(
+  _i3.Future<String?> getString(String? key) => (super.noSuchMethod(
         Invocation.method(
           #getString,
           [key],
         ),
-        returnValue: _i4.Future<_i2.Either<_i3.Failure, String?>>.value(
-            _FakeEither_0<_i3.Failure, String?>(
-          this,
-          Invocation.method(
-            #getString,
-            [key],
-          ),
-        )),
-      ) as _i4.Future<_i2.Either<_i3.Failure, String?>>);
+        returnValue: _i3.Future<String?>.value(),
+      ) as _i3.Future<String?>);
 }
