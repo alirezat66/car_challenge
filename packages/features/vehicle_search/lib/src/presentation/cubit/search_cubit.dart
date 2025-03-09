@@ -1,50 +1,45 @@
-// lib/src/presentation/cubit/search_cubit.dart
+import 'package:core/core.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/entities/vehicle_choice.dart';
-import '../../domain/usecases/search_vehicle_by_vin.dart';
-import '../../domain/usecases/select_vehicle_option.dart';
+import 'package:vehicle_selection/src/domain/entities/auction.dart';
+import 'package:vehicle_selection/vehicle_search.dart';
 
 part 'search_state.dart';
 
 class SearchCubit extends Cubit<SearchState> {
   final SearchVehicleByVin searchVehicleByVin;
   final SelectVehicleOption selectVehicleOption;
+  SearchCubit(
+      {required this.searchVehicleByVin, required this.selectVehicleOption})
+      : super(const SearchState());
 
-  SearchCubit({
-    required this.searchVehicleByVin,
-    required this.selectVehicleOption,
-  }) : super(const SearchState());
+  Future<void> submitVin(String vin) async {
+    emit(state.copyWith(
+      status: SearchStatus.loading,
+      errorMessage: '',
+    ));
 
-  Future<void> searchByVin(String vin) async {
-    emit(state.copyWith(status: SearchStatus.loading, vin: vin));
-
-    final result = await searchVehicleByVin(vin);
+    final result = await searchVehicleByVin.call(vin);
 
     result.fold(
-      (failure) => emit(state.copyWith(
+      (Failure failure) => emit(state.copyWith(
         status: SearchStatus.error,
         errorMessage: failure.message,
       )),
-      (searchResult) {
-        if (searchResult.hasSelectedOption) {
+      (vehicleData) {
+        if (vehicleData.auction != null) {
           emit(state.copyWith(
-            status: SearchStatus.selected,
-            selectedExternalId: searchResult.selectedExternalId,
+            status: SearchStatus.loaded,
+            auction: vehicleData.auction,
           ));
-        } else if (searchResult.hasMultipleChoices) {
-          // Sort choices by similarity (highest first)
-          final sortedChoices = List<VehicleChoice>.from(searchResult.choices!)
+        } else if (vehicleData.choices != null) {
+          // Sort by similarity (highest first)
+          final sortedChoices = List<VehicleChoice>.from(vehicleData.choices!)
             ..sort((a, b) => b.similarity.compareTo(a.similarity));
 
           emit(state.copyWith(
             status: SearchStatus.multipleChoices,
             choices: sortedChoices,
-          ));
-        } else {
-          emit(state.copyWith(
-            status: SearchStatus.error,
-            errorMessage: 'Invalid search result',
           ));
         }
       },
@@ -57,30 +52,38 @@ class SearchCubit extends Cubit<SearchState> {
       selectedExternalId: externalId,
     ));
 
-    final result = await selectVehicleOption(externalId);
+    final result = await selectVehicleOption.call(
+      externalId,
+    );
 
     result.fold(
-      (failure) => emit(state.copyWith(
+      (Failure failure) => emit(state.copyWith(
         status: SearchStatus.error,
         errorMessage: failure.message,
       )),
-      (auctionId) => emit(state.copyWith(
-        status: SearchStatus.selected,
-        selectedExternalId: externalId,
-        auctionId: auctionId,
-      )),
+      (vehicleData) {
+        if (vehicleData.auction != null) {
+          emit(state.copyWith(
+            status: SearchStatus.loaded,
+            auction: vehicleData.auction,
+          ));
+        } else {
+          emit(state.copyWith(
+            status: SearchStatus.error,
+            errorMessage: 'Unexpected response after vehicle selection',
+          ));
+        }
+      },
     );
   }
 
-  void retry() {
-    if (state.vin.isNotEmpty) {
-      if (state.selectedExternalId != null) {
-        selectVehicle(state.selectedExternalId!);
-      } else {
-        searchByVin(state.vin);
-      }
-    } else {
+  Future retry() async {
+    if (state.vin.isNotEmpty && state.selectedExternalId == null) {
       emit(state.copyWith(status: SearchStatus.initial));
+    } else if (state.selectedExternalId != null) {
+      await selectVehicle(state.selectedExternalId!);
+    } else {
+      submitVin(state.vin);
     }
   }
 }

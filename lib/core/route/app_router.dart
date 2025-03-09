@@ -4,7 +4,7 @@ import 'package:car_challenge/core/usecase/usecase.dart';
 import 'package:car_challenge/features/user_identification/domain/usecases/get_user_identification.dart';
 import 'package:car_challenge/features/user_identification/presentation/pages/user_identification_page.dart';
 import 'package:car_challenge/features/vehicle_selection/domain/entities/vehicle_auction.dart';
-import 'package:car_challenge/features/vehicle_selection/presentation/pages/auction/auction_details_page.dart';
+import '../../../packages/features/vehicle_search/lib/src/presentation/pages/auction/auction_details_page.dart';
 import 'package:car_challenge/features/vehicle_selection/presentation/pages/search/vehicle_search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

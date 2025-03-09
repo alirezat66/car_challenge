@@ -1,19 +1,16 @@
 // lib/src/domain/entities/search_result.dart
 import 'package:equatable/equatable.dart';
+import 'package:vehicle_selection/src/domain/entities/auction.dart';
 import 'vehicle_choice.dart';
 
 class SearchResult extends Equatable {
+  final Auction? auction;
   final List<VehicleChoice>? choices;
-  final String? selectedExternalId;
 
-  const SearchResult({
-    this.choices,
-    this.selectedExternalId,
-  });
+  const SearchResult({this.auction, this.choices});
 
-  bool get hasMultipleChoices => choices != null && choices!.isNotEmpty;
-  bool get hasSelectedOption => selectedExternalId != null;
+  bool get isValid => (auction != null) ^ (choices != null);
 
   @override
-  List<Object?> get props => [choices, selectedExternalId];
+  List<Object?> get props => [auction, choices];
 }

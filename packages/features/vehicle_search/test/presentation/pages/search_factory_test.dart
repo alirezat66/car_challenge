@@ -8,8 +8,8 @@ import 'package:ui_kit/ui_kit.dart';
 
 import 'package:vehicle_selection/src/presentation/cubit/search_cubit.dart';
 import 'package:vehicle_selection/src/presentation/pages/factory/search_state_widget_factory.dart';
-import 'package:vehicle_selection/src/presentation/pages/widgets/vehicle_choice_view.dart';
-import 'package:vehicle_selection/src/presentation/pages/widgets/vin_input_form.dart';
+import 'package:vehicle_selection/src/presentation/pages/search/widgets/vehicle_choice_view.dart';
+import 'package:vehicle_selection/src/presentation/pages/search/widgets/vin_input_form.dart';
 import 'package:vehicle_selection/vehicle_search.dart';
 
 import 'search_factory_test.mocks.dart';

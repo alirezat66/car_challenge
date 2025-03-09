@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ui_kit/ui_kit.dart';
-import '../../cubit/search_cubit.dart';
+import 'package:vehicle_selection/src/presentation/pages/search/validator/vin_validation_mixin.dart';
+import '../../../cubit/search_cubit.dart';
 
 class VinInputForm extends StatefulWidget {
   const VinInputForm({super.key});
@@ -11,11 +12,9 @@ class VinInputForm extends StatefulWidget {
   State<VinInputForm> createState() => _VinInputFormState();
 }
 
-class _VinInputFormState extends State<VinInputForm> {
+class _VinInputFormState extends State<VinInputForm> with VinValidationMixin {
   final _formKey = GlobalKey<FormState>();
   final _vinController = TextEditingController();
-  static const int vinLength = 17; // Standard VIN length
-
   @override
   void dispose() {
     _vinController.dispose();
@@ -44,7 +43,7 @@ class _VinInputFormState extends State<VinInputForm> {
             ),
             textInputAction: TextInputAction.search,
             textCapitalization: TextCapitalization.characters,
-            validator: _validateVin,
+            validator: validateVin,
             onFieldSubmitted: (_) => _submitForm(),
           ),
           const SizedBox(height: 24),
@@ -58,21 +57,9 @@ class _VinInputFormState extends State<VinInputForm> {
     );
   }
 
-  String? _validateVin(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter a VIN';
-    }
-    if (value.length != vinLength) {
-      return 'VIN must be exactly $vinLength characters';
-    }
-    return null;
-  }
-
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
-      context
-          .read<SearchCubit>()
-          .searchByVin(_vinController.text.toUpperCase());
+      context.read<SearchCubit>().submitVin(_vinController.text.toUpperCase());
     }
   }
 }

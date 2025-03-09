@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ui_kit/ui_kit.dart';
-import '../../../domain/entities/vehicle_choice.dart';
-import '../../cubit/search_cubit.dart';
+import '../../../../domain/entities/vehicle_choice.dart';
+import '../../../cubit/search_cubit.dart';
 
 class VehicleCarChoiceView extends StatelessWidget {
   final List<VehicleChoice> choices;

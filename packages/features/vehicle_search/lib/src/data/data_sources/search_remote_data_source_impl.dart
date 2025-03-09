@@ -4,9 +4,8 @@ import 'dart:convert';
 import 'package:core/core.dart';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart';
-import 'package:vehicle_selection/src/data/data_sources/search_remote_data_source.dart';
-import 'package:vehicle_selection/src/data/models/vehicle_choice_model.dart';
-import 'package:vehicle_selection/src/domain/entities/search_result.dart';
+import 'package:vehicle_selection/src/data/models/auction_model.dart';
+import 'package:vehicle_selection/vehicle_search.dart';
 
 class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
   final BaseClient httpClient;
@@ -14,35 +13,33 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
   SearchRemoteDataSourceImpl({required this.httpClient});
 
   @override
-  Future<Either<Failure, SearchResult>> searchByVin(
-      String userId, String vin) async {
+  Future<Either<Failure, SearchResult>> search(String userId,
+      {String? vin, String? externalId}) async {
     final headers = {
-      'user': userId,
-      'vin': vin,
+      CosChallenge.user: userId,
+      if (vin != null) 'vin': vin, // Optional VIN header
+      if (externalId != null)
+        'externalId': externalId, // Optional externalId header
     };
 
     try {
       final response = await httpClient.get(
-        Uri.https('anyUrl', '/vehicle'),
+        Uri.https('anyUrl', '/vehicle'), // Arbitrary URL, as per challenge
         headers: headers,
       );
 
-      String responseBody = response.body;
-
-      // Use your JSON fixing utilities for handling malformed JSON
-      if (!responseBody.isValidJson) {
-        responseBody = responseBody.fixedJson;
-      }
-
       switch (response.statusCode) {
         case 200:
-          final json = jsonDecode(responseBody) as Map<String, dynamic>;
-          final externalId = json['externalId'] as String;
-          return Right(SearchResult(selectedExternalId: externalId));
+          final responseString = response.body.isValidJson
+              ? response.body
+              : response.body.fixedJson;
+          final json = jsonDecode(responseString) as Map<String, dynamic>;
+          final auctionModel = AuctionModel.fromJson(json);
+          return Right(SearchResult(auction: auctionModel.toEntity()));
 
         case 300:
-          final jsonList = jsonDecode(responseBody) as List<dynamic>;
-          final choices = jsonList
+          final json = jsonDecode(response.body) as List<dynamic>;
+          final choices = json
               .map((item) =>
                   VehicleChoiceModel.fromJson(item as Map<String, dynamic>))
               .map((model) => model.toEntity())
@@ -50,62 +47,21 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
           return Right(SearchResult(choices: choices));
 
         default:
-          final errorData = jsonDecode(responseBody) as Map<String, dynamic>;
-          final errorKey = errorData['msgKey'] as String? ?? 'server_error';
-          return Left(FailureFactory.createFailure(
-              errorKey: errorKey, data: errorData));
+          final errorData = jsonDecode(response.body) as Map<String, dynamic>;
+          final errorKey = errorData['msgKey'] as String? ?? 'unknown_error';
+          throw FailureFactory.createFailure(
+              errorKey: errorKey, data: errorData);
       }
     } on TimeoutException {
       return Left(FailureFactory.networkFailure('Request timed out'));
     } on ClientException catch (e) {
-      return Left(FailureFactory.authenticationFailure(
+      throw Left(FailureFactory.authenticationFailure(
           'Authentication error: ${e.message}'));
     } on FormatException {
-      return Left(
+      throw Left(
           FailureFactory.deserializationFailure('Invalid response format'));
     } catch (e) {
-      return Left(FailureFactory.unknownFailure(e));
-    }
-  }
-
-  @override
-  Future<Either<Failure, String>> selectVehicleOption(
-      String userId, String externalId) async {
-    final headers = {
-      'user': userId,
-      'externalId': externalId,
-    };
-
-    try {
-      final response = await httpClient.get(
-        Uri.https('anyUrl', '/select'),
-        headers: headers,
-      );
-
-      String responseBody = response.body;
-      if (!responseBody.isValidJson) {
-        responseBody = responseBody.fixedJson;
-      }
-
-      if (response.statusCode == 200) {
-        final json = jsonDecode(responseBody) as Map<String, dynamic>;
-        return Right(json['_fk_uuid_auction'] as String);
-      } else {
-        final errorData = jsonDecode(responseBody) as Map<String, dynamic>;
-        final errorKey = errorData['msgKey'] as String? ?? 'server_error';
-        return Left(
-            FailureFactory.createFailure(errorKey: errorKey, data: errorData));
-      }
-    } on TimeoutException {
-      return Left(FailureFactory.networkFailure('Request timed out'));
-    } on ClientException catch (e) {
-      return Left(FailureFactory.authenticationFailure(
-          'Authentication error: ${e.message}'));
-    } on FormatException {
-      return Left(
-          FailureFactory.deserializationFailure('Invalid response format'));
-    } catch (e) {
-      return Left(FailureFactory.unknownFailure(e));
+      throw Left(FailureFactory.unknownFailure(e));
     }
   }
 }

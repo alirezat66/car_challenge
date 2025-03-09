@@ -1,56 +1,56 @@
-// part of 'search_cubit.dart'
 part of 'search_cubit.dart';
 
-enum SearchStatus {
-  initial,
-  loading,
-  multipleChoices,
-  selected,
-  error,
-}
 
 class SearchState extends Equatable {
   final SearchStatus status;
-  final String vin;
-  final List<VehicleChoice>? choices;
-  final String? selectedExternalId;
-  final String? auctionId;
   final String errorMessage;
+  final Auction? auction;
+  final List<VehicleChoice>? choices;
+  final String vin;
+  final String? selectedExternalId;
 
   const SearchState({
     this.status = SearchStatus.initial,
-    this.vin = '',
-    this.choices,
-    this.selectedExternalId,
-    this.auctionId,
     this.errorMessage = '',
+    this.auction,
+    this.choices,
+    this.vin = '',
+    this.selectedExternalId,
   });
 
   @override
   List<Object?> get props => [
         status,
-        vin,
-        choices,
-        selectedExternalId,
-        auctionId,
         errorMessage,
+        auction,
+        choices,
+        vin,
+        selectedExternalId,
       ];
 
   SearchState copyWith({
     SearchStatus? status,
-    String? vin,
-    List<VehicleChoice>? choices,
-    String? selectedExternalId,
-    String? auctionId,
     String? errorMessage,
+    Auction? auction,
+    List<VehicleChoice>? choices,
+    String? vin,
+    String? selectedExternalId,
   }) {
     return SearchState(
       status: status ?? this.status,
-      vin: vin ?? this.vin,
-      choices: choices ?? this.choices,
-      selectedExternalId: selectedExternalId ?? this.selectedExternalId,
-      auctionId: auctionId ?? this.auctionId,
       errorMessage: errorMessage ?? this.errorMessage,
+      auction: auction ?? this.auction,
+      choices: choices ?? this.choices,
+      vin: vin ?? this.vin,
+      selectedExternalId: selectedExternalId ?? this.selectedExternalId,
     );
   }
+}
+
+enum SearchStatus {
+  initial,
+  loading,
+  loaded,
+  multipleChoices,
+  error,
 }
