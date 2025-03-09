@@ -3,16 +3,11 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
+import 'dart:async' as _i3;
 
-import 'package:flutter_bloc/flutter_bloc.dart' as _i6;
+import 'package:flutter_bloc/flutter_bloc.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:vehicle_selection/src/domain/usecases/search_vehicle_by_vin.dart'
-    as _i2;
-import 'package:vehicle_selection/src/domain/usecases/select_vehicle_option.dart'
-    as _i3;
-import 'package:vehicle_selection/src/presentation/cubit/search_cubit.dart'
-    as _i4;
+import 'package:vehicle_selection/vehicle_search.dart' as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -39,7 +34,7 @@ class _FakeSearchVehicleByVin_0 extends _i1.SmartFake
 }
 
 class _FakeSelectVehicleOption_1 extends _i1.SmartFake
-    implements _i3.SelectVehicleOption {
+    implements _i2.SelectVehicleOption {
   _FakeSelectVehicleOption_1(
     Object parent,
     Invocation parentInvocation,
@@ -49,7 +44,7 @@ class _FakeSelectVehicleOption_1 extends _i1.SmartFake
         );
 }
 
-class _FakeSearchState_2 extends _i1.SmartFake implements _i4.SearchState {
+class _FakeSearchState_2 extends _i1.SmartFake implements _i2.SearchState {
   _FakeSearchState_2(
     Object parent,
     Invocation parentInvocation,
@@ -62,7 +57,7 @@ class _FakeSearchState_2 extends _i1.SmartFake implements _i4.SearchState {
 /// A class which mocks [SearchCubit].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSearchCubit extends _i1.Mock implements _i4.SearchCubit {
+class MockSearchCubit extends _i1.Mock implements _i2.SearchCubit {
   MockSearchCubit() {
     _i1.throwOnMissingStub(this);
   }
@@ -77,28 +72,28 @@ class MockSearchCubit extends _i1.Mock implements _i4.SearchCubit {
       ) as _i2.SearchVehicleByVin);
 
   @override
-  _i3.SelectVehicleOption get selectVehicleOption => (super.noSuchMethod(
+  _i2.SelectVehicleOption get selectVehicleOption => (super.noSuchMethod(
         Invocation.getter(#selectVehicleOption),
         returnValue: _FakeSelectVehicleOption_1(
           this,
           Invocation.getter(#selectVehicleOption),
         ),
-      ) as _i3.SelectVehicleOption);
+      ) as _i2.SelectVehicleOption);
 
   @override
-  _i4.SearchState get state => (super.noSuchMethod(
+  _i2.SearchState get state => (super.noSuchMethod(
         Invocation.getter(#state),
         returnValue: _FakeSearchState_2(
           this,
           Invocation.getter(#state),
         ),
-      ) as _i4.SearchState);
+      ) as _i2.SearchState);
 
   @override
-  _i5.Stream<_i4.SearchState> get stream => (super.noSuchMethod(
+  _i3.Stream<_i2.SearchState> get stream => (super.noSuchMethod(
         Invocation.getter(#stream),
-        returnValue: _i5.Stream<_i4.SearchState>.empty(),
-      ) as _i5.Stream<_i4.SearchState>);
+        returnValue: _i3.Stream<_i2.SearchState>.empty(),
+      ) as _i3.Stream<_i2.SearchState>);
 
   @override
   bool get isClosed => (super.noSuchMethod(
@@ -107,36 +102,36 @@ class MockSearchCubit extends _i1.Mock implements _i4.SearchCubit {
       ) as bool);
 
   @override
-  _i5.Future<void> searchByVin(String? vin) => (super.noSuchMethod(
+  _i3.Future<void> submitVin(String? vin) => (super.noSuchMethod(
         Invocation.method(
-          #searchByVin,
+          #submitVin,
           [vin],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i5.Future<void> selectVehicle(String? externalId) => (super.noSuchMethod(
+  _i3.Future<void> selectVehicle(String? externalId) => (super.noSuchMethod(
         Invocation.method(
           #selectVehicle,
           [externalId],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  void retry() => super.noSuchMethod(
+  _i3.Future<dynamic> retry() => (super.noSuchMethod(
         Invocation.method(
           #retry,
           [],
         ),
-        returnValueForMissingStub: null,
-      );
+        returnValue: _i3.Future<dynamic>.value(),
+      ) as _i3.Future<dynamic>);
 
   @override
-  void emit(_i4.SearchState? state) => super.noSuchMethod(
+  void emit(_i2.SearchState? state) => super.noSuchMethod(
         Invocation.method(
           #emit,
           [state],
@@ -145,7 +140,7 @@ class MockSearchCubit extends _i1.Mock implements _i4.SearchCubit {
       );
 
   @override
-  void onChange(_i6.Change<_i4.SearchState>? change) => super.noSuchMethod(
+  void onChange(_i4.Change<_i2.SearchState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -186,12 +181,12 @@ class MockSearchCubit extends _i1.Mock implements _i4.SearchCubit {
       );
 
   @override
-  _i5.Future<void> close() => (super.noSuchMethod(
+  _i3.Future<void> close() => (super.noSuchMethod(
         Invocation.method(
           #close,
           [],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }

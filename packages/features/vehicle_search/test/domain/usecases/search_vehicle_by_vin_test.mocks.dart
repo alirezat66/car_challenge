@@ -45,39 +45,31 @@ class MockSearchRepository extends _i1.Mock implements _i3.SearchRepository {
   }
 
   @override
-  _i4.Future<_i2.Either<_i5.Failure, _i6.SearchResult>> searchByVin(
-          String? vin) =>
+  _i4.Future<_i2.Either<_i5.Failure, _i6.SearchResult>> search({
+    String? vin,
+    String? externalId,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
-          #searchByVin,
-          [vin],
+          #search,
+          [],
+          {
+            #vin: vin,
+            #externalId: externalId,
+          },
         ),
         returnValue:
             _i4.Future<_i2.Either<_i5.Failure, _i6.SearchResult>>.value(
                 _FakeEither_0<_i5.Failure, _i6.SearchResult>(
           this,
           Invocation.method(
-            #searchByVin,
-            [vin],
+            #search,
+            [],
+            {
+              #vin: vin,
+              #externalId: externalId,
+            },
           ),
         )),
       ) as _i4.Future<_i2.Either<_i5.Failure, _i6.SearchResult>>);
-
-  @override
-  _i4.Future<_i2.Either<_i5.Failure, String>> selectVehicleOption(
-          String? externalId) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #selectVehicleOption,
-          [externalId],
-        ),
-        returnValue: _i4.Future<_i2.Either<_i5.Failure, String>>.value(
-            _FakeEither_0<_i5.Failure, String>(
-          this,
-          Invocation.method(
-            #selectVehicleOption,
-            [externalId],
-          ),
-        )),
-      ) as _i4.Future<_i2.Either<_i5.Failure, String>>);
 }

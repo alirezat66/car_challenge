@@ -1,6 +1,6 @@
 // test/domain/entities/vehicle_choice_test.dart
 import 'package:flutter_test/flutter_test.dart';
-import '../../../lib/src/domain/entities/vehicle_choice.dart';
+import 'package:vehicle_selection/vehicle_search.dart';
 
 void main() {
   group('VehicleChoice', () {

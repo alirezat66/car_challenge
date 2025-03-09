@@ -100,19 +100,21 @@ class MockSelectVehicleOption extends _i1.Mock
       ) as _i2.SearchRepository);
 
   @override
-  _i4.Future<_i3.Either<_i5.Failure, String>> call(String? externalId) =>
+  _i4.Future<_i3.Either<_i5.Failure, _i2.SearchResult>> call(
+          String? externalId) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [externalId],
         ),
-        returnValue: _i4.Future<_i3.Either<_i5.Failure, String>>.value(
-            _FakeEither_1<_i5.Failure, String>(
+        returnValue:
+            _i4.Future<_i3.Either<_i5.Failure, _i2.SearchResult>>.value(
+                _FakeEither_1<_i5.Failure, _i2.SearchResult>(
           this,
           Invocation.method(
             #call,
             [externalId],
           ),
         )),
-      ) as _i4.Future<_i3.Either<_i5.Failure, String>>);
+      ) as _i4.Future<_i3.Either<_i5.Failure, _i2.SearchResult>>);
 }

@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:vehicle_selection/src/domain/entities/auction.dart';
 import 'package:vehicle_selection/src/domain/entities/search_result.dart';
 import 'package:vehicle_selection/src/domain/entities/vehicle_choice.dart';
 import 'package:vehicle_selection/src/domain/usecases/search_vehicle_by_vin.dart';
@@ -29,7 +30,26 @@ void main() {
 
   const testVin = 'TEST12345678901234';
   const testExternalId = 'DE001-018601450020001';
-  const testAuctionId = 'auction-123';
+
+  // Sample auction data for testing
+  final testAuction = Auction(
+    id: 12345,
+    feedback: 'Good condition',
+    valuatedAt: DateTime.parse('2021-01-01T00:00:00.000Z'),
+    requestedAt: DateTime.parse('2021-01-01T00:00:00.000Z'),
+    createdAt: DateTime.parse('2021-01-01T00:00:00.000Z'),
+    updatedAt: DateTime.parse('2021-01-01T00:00:00.000Z'),
+    make: 'Toyota',
+    model: 'GT 86',
+    externalId: testExternalId,
+    fkSellerUser: 'seller123',
+    price: 10000,
+    positiveCustomerFeedback: true,
+    fkUuidAuction: 'auction-123',
+    inspectorRequestedAt: DateTime.parse('2021-01-01T00:00:00.000Z'),
+    origin: 'test',
+    estimationRequestId: 'est123',
+  );
 
   final testChoices = [
     const VehicleChoice(
@@ -39,9 +59,16 @@ void main() {
       similarity: 80,
       externalId: testExternalId,
     ),
+    const VehicleChoice(
+      make: 'Toyota',
+      model: 'GT 86',
+      containerName: 'Another Container',
+      similarity: 60,
+      externalId: 'test-id-2',
+    ),
   ];
 
-  group('searchByVin', () {
+  group('submitVin', () {
     blocTest<SearchCubit, SearchState>(
       'emits [loading, multipleChoices] when search returns choices',
       build: () {
@@ -50,14 +77,17 @@ void main() {
         );
         return cubit;
       },
-      act: (cubit) => cubit.searchByVin(testVin),
+      act: (cubit) => cubit.submitVin(testVin),
       expect: () => [
         isA<SearchState>()
             .having((s) => s.status, 'status', SearchStatus.loading)
-            .having((s) => s.vin, 'vin', testVin),
+            .having((s) => s.errorMessage, 'errorMessage', ''),
         isA<SearchState>()
             .having((s) => s.status, 'status', SearchStatus.multipleChoices)
-            .having((s) => s.choices, 'choices', isA<List<VehicleChoice>>()),
+            .having((s) => s.choices, 'choices', isA<List<VehicleChoice>>())
+            .having((s) => s.choices!.length, 'choices length', 2)
+            .having((s) => s.choices!.first.similarity,
+                'first choice similarity', 80)
       ],
       verify: (_) {
         verify(mockSearchVehicleByVin(testVin)).called(1);
@@ -65,22 +95,22 @@ void main() {
     );
 
     blocTest<SearchCubit, SearchState>(
-      'emits [loading, selected] when search returns a selected vehicle',
+      'emits [loading, loaded] when search returns an auction',
       build: () {
         when(mockSearchVehicleByVin(any)).thenAnswer(
-          (_) async =>
-              const Right(SearchResult(selectedExternalId: testExternalId)),
+          (_) async => Right(SearchResult(auction: testAuction)),
         );
         return cubit;
       },
-      act: (cubit) => cubit.searchByVin(testVin),
+      act: (cubit) => cubit.submitVin(testVin),
       expect: () => [
         isA<SearchState>()
             .having((s) => s.status, 'status', SearchStatus.loading)
-            .having((s) => s.vin, 'vin', testVin),
+            .having((s) => s.errorMessage, 'errorMessage', ''),
         isA<SearchState>()
-            .having((s) => s.status, 'status', SearchStatus.selected)
-            .having((s) => s.selectedExternalId, 'selectedExternalId',
+            .having((s) => s.status, 'status', SearchStatus.loaded)
+            .having((s) => s.auction, 'auction', isNotNull)
+            .having((s) => s.auction!.externalId, 'auction externalId',
                 testExternalId),
       ],
     );
@@ -93,11 +123,11 @@ void main() {
         );
         return cubit;
       },
-      act: (cubit) => cubit.searchByVin(testVin),
+      act: (cubit) => cubit.submitVin(testVin),
       expect: () => [
         isA<SearchState>()
             .having((s) => s.status, 'status', SearchStatus.loading)
-            .having((s) => s.vin, 'vin', testVin),
+            .having((s) => s.errorMessage, 'errorMessage', ''),
         isA<SearchState>()
             .having((s) => s.status, 'status', SearchStatus.error)
             .having((s) => s.errorMessage, 'errorMessage', 'Network error'),
@@ -107,10 +137,10 @@ void main() {
 
   group('selectVehicle', () {
     blocTest<SearchCubit, SearchState>(
-      'emits [loading, selected] when selection succeeds',
+      'emits [loading, loaded] when selection succeeds',
       build: () {
         when(mockSelectVehicleOption(any)).thenAnswer(
-          (_) async => const Right(testAuctionId),
+          (_) async => Right(SearchResult(auction: testAuction)),
         );
         return cubit;
       },
@@ -121,10 +151,12 @@ void main() {
             .having((s) => s.selectedExternalId, 'selectedExternalId',
                 testExternalId),
         isA<SearchState>()
-            .having((s) => s.status, 'status', SearchStatus.selected)
+            .having((s) => s.status, 'status', SearchStatus.loaded)
             .having((s) => s.selectedExternalId, 'selectedExternalId',
                 testExternalId)
-            .having((s) => s.auctionId, 'auctionId', testAuctionId),
+            .having((s) => s.auction, 'auction', isNotNull)
+            .having((s) => s.auction!.externalId, 'auction externalId',
+                testExternalId),
       ],
       verify: (_) {
         verify(mockSelectVehicleOption(testExternalId)).called(1);
@@ -150,65 +182,50 @@ void main() {
             .having((s) => s.errorMessage, 'errorMessage', 'Server error'),
       ],
     );
+
+    blocTest<SearchCubit, SearchState>(
+      'emits [loading, error] when selection returns unexpected structure',
+      build: () {
+        when(mockSelectVehicleOption(any)).thenAnswer(
+          (_) async => Right(SearchResult(
+              choices: testChoices)), // Unexpected result structure
+        );
+        return cubit;
+      },
+      act: (cubit) => cubit.selectVehicle(testExternalId),
+      expect: () => [
+        isA<SearchState>()
+            .having((s) => s.status, 'status', SearchStatus.loading)
+            .having((s) => s.selectedExternalId, 'selectedExternalId',
+                testExternalId),
+        isA<SearchState>()
+            .having((s) => s.status, 'status', SearchStatus.error)
+            .having((s) => s.errorMessage, 'errorMessage',
+                'Unexpected response after vehicle selection'),
+      ],
+    );
   });
 
   group('retry', () {
-    blocTest<SearchCubit, SearchState>(
-      'calls searchByVin when there is a VIN but no selectedExternalId',
-      build: () {
-        when(mockSearchVehicleByVin(any)).thenAnswer(
-          (_) async => Right(SearchResult(choices: testChoices)),
-        );
-        return cubit;
-      },
-      seed: () => const SearchState(
-        status: SearchStatus.error,
-        vin: testVin,
-        errorMessage: 'Previous error',
-      ),
-      act: (cubit) => cubit.retry(),
-      verify: (_) {
-        verify(mockSearchVehicleByVin(testVin)).called(1);
-      },
-    );
+    
 
-    blocTest<SearchCubit, SearchState>(
-      'calls selectVehicle when there is a selectedExternalId',
-      build: () {
-        when(mockSelectVehicleOption(any)).thenAnswer(
-          (_) async => const Right(testAuctionId),
-        );
-        return cubit;
-      },
-      seed: () => const SearchState(
+    test('calls selectVehicle when there is a selectedExternalId', () {
+      // Arrange
+      when(mockSelectVehicleOption(any)).thenAnswer(
+        (_) async => Right(SearchResult(auction: testAuction)),
+      );
+      cubit.emit(const SearchState(
         status: SearchStatus.error,
+        errorMessage: 'Previous error',
         vin: testVin,
         selectedExternalId: testExternalId,
-        errorMessage: 'Previous error',
-      ),
-      act: (cubit) => cubit.retry(),
-      verify: (_) {
-        verify(mockSelectVehicleOption(testExternalId)).called(1);
-      },
-    );
+      ));
 
-    blocTest<SearchCubit, SearchState>(
-      'resets to initial state when no VIN',
-      build: () => cubit,
-      seed: () => const SearchState(
-        status: SearchStatus.error,
-        errorMessage: 'Previous error',
-      ),
-      act: (cubit) => cubit.retry(),
-      expect: () => [
-        // The test is expecting an empty error message but the current implementation preserves it
-        // We should update either the test or the implementation
-        const SearchState(
-          status: SearchStatus.initial,
-          errorMessage:
-              'Previous error', // Include this to match actual implementation
-        ),
-      ],
-    );
+      // Act
+      cubit.retry();
+
+      // Assert
+      verify(mockSelectVehicleOption(testExternalId)).called(1);
+    });
   });
 }

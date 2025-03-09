@@ -30,6 +30,7 @@ class SearchRepositoryImpl implements SearchRepository {
         final remoteResult = await remoteDataSource.search(
           userId,
           vin: vin,
+          externalId: externalId,
         );
 
         // Step 4 Main Task: Cache if auction data is received (status 200)

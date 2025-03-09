@@ -8,12 +8,12 @@ import 'dart:async' as _i4;
 import 'package:core/core.dart' as _i5;
 import 'package:dartz/dartz.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:vehicle_selection/src/data/data_sources/search_remote_data_source.dart'
-    as _i3;
-import 'package:vehicle_selection/src/data/data_sources/user_data_source.dart'
+import 'package:vehicle_selection/src/data/data_sources/search_local_data_source.dart'
     as _i7;
+import 'package:vehicle_selection/src/data/models/auction_model.dart' as _i8;
 import 'package:vehicle_selection/src/domain/entities/search_result.dart'
     as _i6;
+import 'package:vehicle_selection/vehicle_search.dart' as _i3;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -48,63 +48,79 @@ class MockSearchRemoteDataSource extends _i1.Mock
   }
 
   @override
-  _i4.Future<_i2.Either<_i5.Failure, _i6.SearchResult>> searchByVin(
-    String? userId,
+  _i4.Future<_i2.Either<_i5.Failure, _i6.SearchResult>> search(
+    String? userId, {
     String? vin,
-  ) =>
+    String? externalId,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
-          #searchByVin,
-          [
-            userId,
-            vin,
-          ],
+          #search,
+          [userId],
+          {
+            #vin: vin,
+            #externalId: externalId,
+          },
         ),
         returnValue:
             _i4.Future<_i2.Either<_i5.Failure, _i6.SearchResult>>.value(
                 _FakeEither_0<_i5.Failure, _i6.SearchResult>(
           this,
           Invocation.method(
-            #searchByVin,
-            [
-              userId,
-              vin,
-            ],
+            #search,
+            [userId],
+            {
+              #vin: vin,
+              #externalId: externalId,
+            },
           ),
         )),
       ) as _i4.Future<_i2.Either<_i5.Failure, _i6.SearchResult>>);
+}
+
+/// A class which mocks [SearchLocalDataSource].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSearchLocalDataSource extends _i1.Mock
+    implements _i7.SearchLocalDataSource {
+  MockSearchLocalDataSource() {
+    _i1.throwOnMissingStub(this);
+  }
 
   @override
-  _i4.Future<_i2.Either<_i5.Failure, String>> selectVehicleOption(
-    String? userId,
-    String? externalId,
-  ) =>
+  _i4.Future<_i2.Either<_i5.Failure, _i8.AuctionModel>> getVehicleAuction() =>
       (super.noSuchMethod(
         Invocation.method(
-          #selectVehicleOption,
-          [
-            userId,
-            externalId,
-          ],
+          #getVehicleAuction,
+          [],
         ),
-        returnValue: _i4.Future<_i2.Either<_i5.Failure, String>>.value(
-            _FakeEither_0<_i5.Failure, String>(
+        returnValue:
+            _i4.Future<_i2.Either<_i5.Failure, _i8.AuctionModel>>.value(
+                _FakeEither_0<_i5.Failure, _i8.AuctionModel>(
           this,
           Invocation.method(
-            #selectVehicleOption,
-            [
-              userId,
-              externalId,
-            ],
+            #getVehicleAuction,
+            [],
           ),
         )),
-      ) as _i4.Future<_i2.Either<_i5.Failure, String>>);
+      ) as _i4.Future<_i2.Either<_i5.Failure, _i8.AuctionModel>>);
+
+  @override
+  _i4.Future<void> saveVehicleAuction(_i3.Auction? auctionModel) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #saveVehicleAuction,
+          [auctionModel],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 }
 
 /// A class which mocks [UserDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockUserDataSource extends _i1.Mock implements _i7.UserDataSource {
+class MockUserDataSource extends _i1.Mock implements _i3.UserDataSource {
   MockUserDataSource() {
     _i1.throwOnMissingStub(this);
   }
